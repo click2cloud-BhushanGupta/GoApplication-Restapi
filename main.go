@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
+//build struct and how they represented in json
 type User struct {
 	ID        int    `json:"id"`
 	FirstName string `json:"firstname"`
@@ -164,7 +166,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	db, err = sql.Open("mysql", "root:Root@12345@tcp(127.0.0.1:3306)/userinfo")
+	db, err = sql.Open("mysql", "root:"+os.Getenv("DB_PASS")+"@tcp(127.0.0.1:3306)/userinfo")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -178,6 +180,6 @@ func main() {
 	router.HandleFunc("/users/{id}", updateUser).Methods("PUT")
 	router.HandleFunc("/users/{id}", deleteUser).Methods("DELETE")
 	router.HandleFunc("/users", deleteallUser).Methods("DELETE")
-
+	//to run server
 	http.ListenAndServe(":8000", router)
 }

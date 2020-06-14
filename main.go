@@ -166,7 +166,11 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	db, err = sql.Open("mysql", "root:"+os.Getenv("DB_PASS")+"@tcp(127.0.0.1:3306)/userinfo")
+	dbDriver := os.Getenv("DB_DRIVER")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbName := os.Getenv("DB_NAME")
+	db, err = sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
 	if err != nil {
 		panic(err.Error())
 	}

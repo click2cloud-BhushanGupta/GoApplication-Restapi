@@ -25,6 +25,7 @@ var db *sql.DB
 var err error
 
 func getUsers(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w,"it's working")
 	w.Header().Set("Content-Type", "application/json")
 	var users []User
 	result, err := db.Query("SELECT * from users ORDER BY id desc")
@@ -170,7 +171,7 @@ func main() {
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASS")
 	dbName := os.Getenv("DB_NAME")
-	db, err = sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	db, err = sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+os.Getenv("Container_name")+")/"+dbName)
 	if err != nil {
 		panic(err.Error())
 	}
